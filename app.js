@@ -273,8 +273,9 @@ document.addEventListener("DOMContentLoaded",() => {
     const products = new Products();
     // setup app
     ui.setupAPP();
-    // get all products
+    // create client
     createClient().then(client => {
+        // get all products
         products.getProducts(client).then(products => {
             ui.displayProducts(products);
             Storage.saveProducts(products);
