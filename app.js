@@ -1,9 +1,27 @@
-const client = contentful.createClient({
-    // This is the space ID. A space is like a project folder in Contentful terms
-    space: "SPACE_ID",
-    // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
-    accessToken: "ACCESS_TOKEN"
-  });
+async function createClient() {
+    let result = await fetch ("config.json");
+    let data = await result.json();
+    const space = data.apiKeys.space;
+    const accessToken = data.apiKeys.accessToken;
+
+    const client = await contentful.createClient({
+        
+        // This is the space ID. A space is like a project folder in Contentful terms
+        space: space,
+        // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
+        accessToken: accessToken
+        });
+    
+    return client;
+}
+
+// const client = contentful.createClient({
+    
+//     // This is the space ID. A space is like a project folder in Contentful terms
+//     space: "71twfnm1d50w",
+//     // This is the access token for this space. Normally you get both ID and the token in the Contentful web app
+//     accessToken: "m1gydBNvfLfXE5ZAl1ihOc807IzZJSabimrBuZCv5Vk"
+//   });
 
 // variables
 const cartBtn = document.querySelector(".cart-btn");
@@ -23,7 +41,7 @@ let buttonsDOM = [];
 
 // getting the products
 class Products {
-    async getProducts() {
+    async getProducts(client) {
         try {
 
             let contentful = await client.getEntries({
@@ -256,11 +274,13 @@ document.addEventListener("DOMContentLoaded",() => {
     // setup app
     ui.setupAPP();
     // get all products
-    products.getProducts().then(products => {
-        ui.displayProducts(products);
-        Storage.saveProducts(products);
-    }).then(()=> {
-        ui.getBagButtons();
-        ui.cartLogic();
+    createClient().then(client => {
+        products.getProducts(client).then(products => {
+            ui.displayProducts(products);
+            Storage.saveProducts(products);
+        }).then(()=> {
+            ui.getBagButtons();
+            ui.cartLogic();
+        });
     });
 });
