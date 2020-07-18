@@ -30,7 +30,7 @@ class Products {
                 content_type: "comfyHouse"
             });
 
-            console.log(contentful);
+            // console.log(contentful);
 
             // let result = await fetch ("products.json");
             // let data = await result.json();
